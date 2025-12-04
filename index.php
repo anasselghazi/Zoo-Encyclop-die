@@ -103,26 +103,33 @@
     <div id="addAnimalModal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden">
         <div class="bg-white p-6 rounded-2xl w-full max-w-md shadow-xl">
             <h2 class="text-2xl font-bold mb-4 text-indigo-600">Ajouter un Animal</h2>
-            <form>
+
+             
+
+            <form  action="ajouter.php" method="POST" >
                 <label class="font-semibold">Nom :</label>
-                <input type="text" class="w-full p-2 border rounded mb-3">
+                <input type="text" name="nomAnimal" class="w-full p-2 border rounded mb-3">
 
                 <label class="font-semibold">Type Alimentaire :</label>
-                <select class="w-full p-2 border rounded mb-3">
-                    <option>Carnivore</option>
-                    <option>Herbivore</option>
-                    <option>Omnivore</option>
+                <select name="type_alimentaire" class="w-full p-2 border rounded mb-3">
+                    <option value = "Carnivore">Carnivore</option>
+                    <option value="Herbivore">Herbivore</option>
+                    <option value="Omnivore" >Omnivore</option>
+                </select>
+                <label class="font-semibold">Habitat :</label>
+                <select name="id_habitat" class="w-full p-2 border rounded mb-3">
+                    <option value="2">Savane</option>
+                    <option value = "3">Jungle</option>
+                    <option value="4">Désert</option>
+                    <option value = "6">Océan</option>
                 </select>
 
-                <label class="font-semibold">Habitat :</label>
-                <input type="text" class="w-full p-2 border rounded mb-3">
-
                 <label class="font-semibold">Lien Image :</label>
-                <input type="text" placeholder="https://example.com/image.jpg" class="w-full p-2 border rounded mb-3">
+                <input type="text" name="image" placeholder="https://example.com/image.jpg" class="w-full p-2 border rounded mb-3">
 
                 <div class="flex justify-end gap-3 mt-4">
                     <button type="button" onclick="closeModal('addAnimalModal')" class="px-4 py-2 bg-gray-300 rounded-xl">Fermer</button>
-                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl">Ajouter</button>
+                    <button type="submit" name="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-xl">Ajouter</button>
                 </div>
             </form>
         </div>

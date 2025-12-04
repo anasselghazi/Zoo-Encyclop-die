@@ -1,3 +1,30 @@
+ 
+ <?php
+ include 'dbconnect.php';
+$sql="SELECT a.idAnimal,a.NomAnimal,a.Type_alimentaire,a.image,h.NomHabitat
+FROM  animal a
+    INNER JOIN habitat h ON a.id_habitat = h.idHab ";
+    $result = mysqli_query($conn,$sql);
+
+ ?>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -58,18 +85,39 @@
             </div>
             <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Cartes animales statiques -->
-                <div class="animal-card bg-white rounded-2xl shadow-lg p-4">
-                    <img src="https://via.placeholder.com/150" class="w-full h-40 object-cover rounded-lg mb-3">
-                    <h3 class="text-lg font-bold text-gray-800">Lion</h3>
-                    <p class="text-gray-600">Carnivore</p>
-                </div>
-                <div class="animal-card bg-white rounded-2xl shadow-lg p-4">
-                    <img src="https://via.placeholder.com/150" class="w-full h-40 object-cover rounded-lg mb-3">
-                    <h3 class="text-lg font-bold text-gray-800">Girafe</h3>
-                    <p class="text-gray-600">Herbivore</p>
-                </div>
+             <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <?php while($row = mysqli_fetch_assoc($result)) { ?>
+        <div class="animal-card bg-white rounded-2xl shadow-lg p-4 relative">
+
+            <!-- Image -->
+            <img src="<?= $row['image'] ?>" class="w-full h-40 object-cover rounded-lg mb-3">
+
+            <!-- Infos -->
+            <h3 class="text-lg font-bold text-gray-800"><?= $row['NomAnimal'] ?></h3>
+            <p class="text-gray-600"><?= $row['Type_alimentaire'] ?></p>
+            <p class="text-gray-500 text-sm">Habitat : <?= $row['NomHabitat'] ?></p>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-3 mt-4">
+
+                <!-- Edit button -->
+                <a href="modifier.php?id=<?= $row['idAnimal'] ?>"
+                   class="text-blue-600 hover:text-blue-800 transition">
+                    <i class="fa-solid fa-pen-to-square text-xl"></i>
+                </a>
+
+                <!-- Delete button -->
+                <a href="supprimer.php?id=<?= $row['idAnimal'] ?>"
+                   onclick="return confirm('Supprimer cet animal ?');"
+                   class="text-red-600 hover:text-red-800 transition">
+                    <i class="fa-solid fa-trash text-xl"></i>
+                </a>
+
             </div>
+
         </div>
+    <?php } ?>
+</div>
 
         <!-- Habitats -->
         <div id="habitats" class="section">

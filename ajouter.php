@@ -11,9 +11,9 @@ if (isset($_POST['submit'])) {
             VALUES ('$nom', '$type', '$image', $idHab)";
 
     if (mysqli_query($conn, $sql)) {
-        $message = "Animal ajouté avec succès !";
+        echo  "Animal ajouté avec succès !";
     } else {
-        $message = "Erreur : " . mysqli_error($conn);
+        echo "Erreur : " . mysqli_error($conn);
     }
 }
 ?>
@@ -77,18 +77,47 @@ if (isset($_POST['submit'])) {
             </div>
             <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <!-- Cartes animales statiques -->
-                <div class="animal-card bg-white rounded-2xl shadow-lg p-4">
-                    <img src="https://via.placeholder.com/150" class="w-full h-40 object-cover rounded-lg mb-3">
-                    <h3 class="text-lg font-bold text-gray-800">Lion</h3>
-                    <p class="text-gray-600">Carnivore</p>
-                </div>
-                <div class="animal-card bg-white rounded-2xl shadow-lg p-4">
-                    <img src="https://via.placeholder.com/150" class="w-full h-40 object-cover rounded-lg mb-3">
-                    <h3 class="text-lg font-bold text-gray-800">Girafe</h3>
-                    <p class="text-gray-600">Herbivore</p>
-                </div>
+                 <div id="animaux" class="section">
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-6 flex justify-between items-center">
+                <h1 class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-blue-600">Gestion des Animaux</h1>
+                <button onclick="openModal('addAnimalModal')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl">Ajouter un Animal</button>
             </div>
+            <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Cartes animales statiques -->
+             <div id="animalsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <?php while($row = mysqli_fetch_assoc($result)) { ?>
+        <div class="animal-card bg-white rounded-2xl shadow-lg p-4 relative">
+
+            <!-- Image -->
+            <img src="<?= $row['image'] ?>" class="w-full h-40 object-cover rounded-lg mb-3">
+
+            <!-- Infos -->
+            <h3 class="text-lg font-bold text-gray-800"><?= $row['NomAnimal'] ?></h3>
+            <p class="text-gray-600"><?= $row['Type_alimentaire'] ?></p>
+            <p class="text-gray-500 text-sm">Habitat : <?= $row['NomHabitat'] ?></p>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-3 mt-4">
+
+                <!-- Edit button -->
+                <a href="modifier.php?id=<?= $row['idAnimal'] ?>"
+                   class="text-blue-600 hover:text-blue-800 transition">
+                    <i class="fa-solid fa-pen-to-square text-xl"></i>
+                </a>
+
+                <!-- Delete button -->
+                <a href="supprimer.php?id=<?= $row['idAnimal'] ?>"
+                   onclick="return confirm('Supprimer cet animal ?');"
+                   class="text-red-600 hover:text-red-800 transition">
+                    <i class="fa-solid fa-trash text-xl"></i>
+                </a>
+
+            </div>
+
         </div>
+    <?php } ?>
+</div>
+
 
         <!-- Habitats -->
         <div id="habitats" class="section">

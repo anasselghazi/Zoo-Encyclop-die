@@ -1,4 +1,4 @@
-CREATE DATABASE zoo ;
+  CREATE DATABASE zoo ;
 
 
  use zoo ;

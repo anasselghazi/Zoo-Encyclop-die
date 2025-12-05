@@ -1,3 +1,47 @@
+
+
+<?php
+include 'dbconnect.php';
+
+// --- Données pour Chart 1 : Type Alimentaire ---
+$types = ['Carnivore', 'Herbivore', 'Omnivore'];
+$typeCounts = [];
+
+foreach ($types as $type) {
+    $sql = "SELECT COUNT(*) AS count FROM animal WHERE Type_alimentaire = '$type'";
+    $result = mysqli_query($conn, $sql);
+    $row = mysqli_fetch_assoc($result);
+    $typeCounts[] = $row['count'];
+}
+
+// --- Données pour Chart 2 : Habitat ---
+$sqlHab = "SELECT h.NomHabitat, COUNT(a.idAnimal) AS count 
+           FROM habitat h 
+           LEFT JOIN animal a ON a.id_habitat = h.idHab 
+           GROUP BY h.idHab";
+$resultHab = mysqli_query($conn, $sqlHab);
+
+$habitats = [];
+$habCounts = [];
+while ($row = mysqli_fetch_assoc($resultHab)) {
+    $habitats[] = $row['NomHabitat'];
+    $habCounts[] = $row['count'];
+}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -75,34 +119,37 @@
     </div>
 
     <!-- JS CHARTS -->
-    <script>
-        // --- Chart 1 : Alimentaire ---
-        const ctx1 = document.getElementById('foodChart');
-        new Chart(ctx1, {
-            type: 'pie',
-            data: {
-                labels: ['Carnivore', 'Herbivore', 'Omnivore'],
-                datasets: [{
-                    data: [5, 8, 3], // يمكن تغييرها بـ PHP
-                    backgroundColor: ['#ef4444', '#22c55e', '#eab308'],
-                }]
-            }
-        });
+     
 
-        // --- Chart 2 : Habitats ---
-        const ctx2 = document.getElementById('habitatChart');
-        new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: ['Savane', 'Jungle', 'Désert', 'Océan'],
-                datasets: [{
-                    label: 'Nombre d\'animaux',
-                    data: [6, 4, 2, 3], // يمكن تغييرها بـ PHP
-                    backgroundColor: '#6366f1',
-                }]
-            }
-        });
-    </script>
+
+<script>
+    // Chart 1 : Type Alimentaire
+    const ctx1 = document.getElementById('foodChart');
+    new Chart(ctx1, {
+        type: 'pie',
+        data: {
+            labels: <?php echo json_encode($types); ?>,
+            datasets: [{
+                data: <?php echo json_encode($typeCounts); ?>,
+                backgroundColor: ['#ef4444', '#22c55e', '#eab308'],
+            }]
+        }
+    });
+
+    // Chart 2 : Habitat
+    const ctx2 = document.getElementById('habitatChart');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: <?php echo json_encode($habitats); ?>,
+            datasets: [{
+                label: "Nombre d'animaux",
+                data: <?php echo json_encode($habCounts); ?>,
+                backgroundColor: '#6366f1',
+            }]
+        }
+    });
+</script>
 
 </body>
 

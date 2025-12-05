@@ -231,10 +231,10 @@ $result = mysqli_query($conn, $sql);
 
                 <select name="id_habitat"  class="w-full p-3 border rounded-xl">
                     <option value="">Habitat</option>
-                    <option value = "">Savane</option>
-                    <option value ="13">Jungle</option>
-                    <option value="">Désert</option>
-                    <option value="">Océan</option>
+                    <option value = "15">Savane</option>
+                    <option value ="14">Jungle</option>
+                    <option value="16">Désert</option>
+                    <option value="17">Océan</option>
                 </select>
 
                 <input type="text" name="image" placeholder="image.jpg" class="w-full p-3 border rounded-xl">

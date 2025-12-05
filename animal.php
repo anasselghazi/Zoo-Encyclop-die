@@ -43,6 +43,18 @@ if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
         echo "Erreur : " . mysqli_error($conn);
     }
 }
+//FILTER
+ $habitat = $_POST['habitat'] ?? '';
+$type = $_POST['type'] ?? '';
+
+$sql = "SELECT a.*, h.NomHabitat
+        FROM animal a
+        INNER JOIN habitat h ON a.id_habitat = h.idHab
+        WHERE ('$habitat' = '' OR h.NomHabitat = '$habitat')
+          AND ('$type' = '' OR a.Type_alimentaire = '$type')";
+
+$result = mysqli_query($conn, $sql);
+
 
 
  ?>
@@ -95,12 +107,7 @@ if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
         <!-- MAIN CONTENT -->
         <main class="flex-1 p-10">
 
-            <header class="bg-pink-400 text-white p-6 rounded-2xl shadow-lg mb-10">
-                <h1 class="text-4xl font-bold text-center">Animals</h1>
-                <p class="text-center mt-1 text-pink-100">
-                    Explore and learn about zoo animals!
-                </p>
-            </header>
+            
 
             <!-- ADD BUTTON -->
             <div class="flex justify-end mb-6">
@@ -110,26 +117,54 @@ if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
                 </button>
             </div>
 <!-- FILTERS -->
-<div class="flex gap-4 mb-8">
+ <form action="animal.php" method="POST" class="bg-white p-5 rounded-2xl shadow mb-8">
 
-    <!-- Filter Habitat -->
-    <select class="w-1/2 p-3 border rounded-xl bg-white shadow">
-        <option value="">Filter by Habitat</option>
-        <option value="Savane">Savane</option>
-        <option value="Jungle">Jungle</option>
-        <option value="Désert">Désert</option>
-        <option value="Océan">Océan</option>
-    </select>
+    <h2 class="text-xl font-semibold text-purple-700 mb-4">
+        🔍 Filtrer les animaux
+    </h2>
 
-    <!-- Filter Type Alimentaire -->
-    <select class="w-1/2 p-3 border rounded-xl bg-white shadow">
-        <option >Type Alimentaire</option>
-        <option value="Carnivore">Carnivore</option>
-        <option value="Herbivore">Herbivore</option>
-        <option value="Omnivore">Omnivore</option>
-    </select>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-</div>
+        <!-- Filter Habitat -->
+        <div>
+            <label class="text-gray-700 font-medium">Habitat</label>
+            <select name="habitat" class="w-full mt-1 p-3 border rounded-xl bg-white shadow-sm">
+                <option value="">Tous les habitats</option>
+                <option value="Savane">Savane</option>
+                <option value="Jungle">Jungle</option>
+                <option value="Désert">Désert</option>
+                <option value="Océan">Océan</option>
+            </select>
+        </div>
+
+        <!-- Filter Type alimentaire -->
+        <div>
+            <label class="text-gray-700 font-medium">Type Alimentaire</label>
+            <select name="type" class="w-full mt-1 p-3 border rounded-xl bg-white shadow-sm">
+                <option value="">Tous les types</option>
+                <option value="Carnivore">Carnivore</option>
+                <option value="Herbivore">Herbivore</option>
+                <option value="Omnivore">Omnivore</option>
+            </select>
+        </div>
+
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-4 flex gap-3">
+        <button type="submit" 
+                class="bg-purple-600 text-white px-5 py-2 rounded-xl shadow hover:bg-purple-700 transition">
+            Filtrer
+        </button>
+
+        <a href="animal.php"
+           class="bg-gray-300 px-5 py-2 rounded-xl shadow hover:bg-gray-400 transition">
+            Réinitialiser
+        </a>
+    </div>
+
+</form>
+
             <!-- ANIMALS GRID -->
             <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
  
@@ -168,7 +203,7 @@ if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
 </form>
 
 </div>
-
+</div>
 <?php endwhile; ?>
 
             </section>
@@ -196,10 +231,10 @@ if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
 
                 <select name="id_habitat"  class="w-full p-3 border rounded-xl">
                     <option value="">Habitat</option>
-                    <option value = "2">Savane</option>
-                    <option value ="3">Jungle</option>
-                    <option value="4">Désert</option>
-                    <option value="6">Océan</option>
+                    <option value = "">Savane</option>
+                    <option value ="13">Jungle</option>
+                    <option value="">Désert</option>
+                    <option value="">Océan</option>
                 </select>
 
                 <input type="text" name="image" placeholder="image.jpg" class="w-full p-3 border rounded-xl">

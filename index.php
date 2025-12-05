@@ -17,7 +17,7 @@
             <h2 class="text-3xl font-bold text-center mb-10">🐾 Zoo Kids</h2>
 
             <nav class="flex flex-col gap-4">
-                <a href="/youcode/Zoo-Encyclop-die/index.php"
+                <a href="index.php"
                     class="bg-purple-600 hover:bg-purple-500 transition p-3 rounded-xl font-semibold text-center">🏠
                     Home</a>
 

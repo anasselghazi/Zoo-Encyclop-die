@@ -4,17 +4,18 @@
 include 'dbconnect.php';
 
 if (isset($_POST['submit'])) {
-    $nom = $_POST['nomAnimal'];
-    $description = $_POST['type_alimentaire'];
+    $nom = $_POST['NomHabitat'];
+    $description = $_POST['Description_Hab'];
+    $image=$_POST['image'];
      
 
-     $sql = "INSERT INTO habitat (NomHabitat, Description_Hab)
-            VALUES ('$nom', '$description')";
+     $sql = "INSERT INTO habitat (NomHabitat, Description_Hab ,image)
+            VALUES ('$nom', '$description','$image')";
 
     if (mysqli_query($conn, $sql)) {
         echo  "habitat ajouté avec succès !";
         
-    header("Location: animal.php?success=1");
+    header("Location: habitat.php?success=1");
     exit();
 
 
@@ -22,23 +23,12 @@ if (isset($_POST['submit'])) {
         echo "Erreur : " . mysqli_error($conn);
     }
 }
-?>
-  <?php
- include 'dbconnect.php';
-$sql="SELECT a.idAnimal,a.NomAnimal,a.Type_alimentaire,a.image,h.NomHabitat
-FROM  animal a
-    INNER JOIN habitat h ON a.id_habitat = h.idHab ";
-    $result = mysqli_query($conn,$sql);
-
+$sql="SELECT * FROM habitat";
+$result=mysqli_query($conn,$sql);
+   
 
  ?>
  
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -92,33 +82,48 @@ FROM  animal a
             </div>
 
             <!-- HABITATS GRID -->
-            <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
 
-                <!-- Example Card -->
-                <div class="bg-white rounded-2xl shadow-xl p-6 text-center">
-                    <img src="img/savane.jpg" class="w-full h-32 object-cover rounded-xl mb-4">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-1">Savane</h3>
-                    <p class="text-gray-600 text-sm mb-4">Large hot open grassland.</p>
+       <?php while ($row = mysqli_fetch_assoc($result)) : ?>
 
-                    <div class="flex justify-between">
-                        <a href="edit_habitat.php?id=1" class="px-3 py-1 bg-yellow-500 text-white rounded">Modifier</a>
-                        <a href="delete_habitat.php?id=1" class="px-3 py-1 bg-red-600 text-white rounded">Supprimer</a>
-                    </div>
-                </div>
+    <div class="bg-white rounded-2xl shadow-lg p-5 text-center">
 
-                <div class="bg-white rounded-2xl shadow-xl p-6 text-center">
-                    <img src="img/jungle.jpg" class="w-full h-32 object-cover rounded-xl mb-4">
-                    <h3 class="text-xl font-semibold text-purple-700 mb-1">Jungle</h3>
-                    <p class="text-gray-600 text-sm mb-4">Dense forest with humidity.</p>
+        <!-- Image -->
+        <img src="uploads/<?php echo $row['image']; ?>" 
+             class="w-28 h-28 object-cover mx-auto rounded-xl mb-4">
 
-                    <div class="flex justify-between">
-                        <a href="edit_habitat.php?id=2" class="px-3 py-1 bg-yellow-500 text-white rounded">Modifier</a>
-                        <a href="delete_habitat.php?id=2" class="px-3 py-1 bg-red-600 text-white rounded">Supprimer</a>
-                    </div>
-                </div>
+        <!-- Name -->
+        <h3 class="text-xl font-bold text-green-700 mb-2">
+            <?php echo $row['NomHabitat']; ?>
+        </h3>
 
-            </section>
+        <!-- Description -->
+        <p class="text-gray-600 text-sm mb-3">
+            <?php echo $row['Description_Hab']; ?>
+        </p>
 
+        <!-- Buttons -->
+        <div class="flex justify-center gap-3 mt-3">
+
+            <!-- Edit -->
+            <a href="edit_habitat.php?id=<?php echo $row['idHab']; ?>"
+               class="bg-blue-500 text-white px-3 py-1 rounded-lg">
+               ✏️ تعديل
+            </a>
+
+            <!-- Delete -->
+            <a href="delete_habitat.php?id=<?php echo $row['idHab']; ?>"
+               class="bg-red-500 text-white px-3 py-1 rounded-lg"
+               onclick="return confirm('واش متأكد بلي بغيتي تحذف هاد المكان؟');">
+               🗑️ حذف
+            </a>
+        </div>
+
+    </div>
+
+<?php endwhile; ?>
+
+</section>
         </main>
     </div>
 
@@ -129,12 +134,12 @@ FROM  animal a
         <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 animate-fadeIn">
             <h2 class="text-2xl font-bold text-purple-700 mb-4 text-center">Add New Habitat</h2>
 
-            <form class="space-y-4">
+            <form  action="habitat.php" method="POST" class="space-y-4">
                 <input type="text" name="NomHabitat" placeholder="Habitat Name" class="w-full p-3 border rounded-xl">
 
                 <textarea name="Description_Hab" placeholder="Description" class="w-full p-3 border rounded-xl"></textarea>
 
-                <input type="file" class="w-full p-3 border rounded-xl">
+                <input type="text" name ="image" class="w-full p-3 border rounded-xl">
 
                 <div class="flex justify-between">
                     <button type="button" onclick="closeModal()"

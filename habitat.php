@@ -128,7 +128,7 @@ if(isset($_POST['delete']) && isset($_POST['idHab'])) {
             </a>
 
             <!-- Delete -->
-             <form action="habitat.php" method="POST" onsubmit="return confirm('واش متأكد بلي بغيتي تحذف هاد المكان؟');">
+             <form action="habitat.php" method="POST" onsubmit="return confirm('Supprimer cet animal ?');">
             <input type="hidden" name="idHab" value="<?php echo $row['idHab']; ?>">
           <button type="submit" name="delete" class="bg-red-500 text-white px-3 py-1 rounded-lg">
         🗑️delete

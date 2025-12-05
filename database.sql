@@ -6,7 +6,8 @@
 CREATE TABLE HABITAT ( 
     idHab int PRIMARY KEY AUTO_INCREMENT,
     NomHabitat varchar(50) not NULL,
-    Description_Hab text NOT NULL
+    Description_Hab text NOT NULL,
+    image varchar(200) NOT NULL
 );
 
 CREATE TABLE ANIMAL (

@@ -2,7 +2,7 @@
 
 <?php
 include 'dbconnect.php';
-
+ // AJOUTER
 if (isset($_POST['submit'])) {
     $nom = $_POST['NomHabitat'];
     $description = $_POST['Description_Hab'];
@@ -23,10 +23,26 @@ if (isset($_POST['submit'])) {
         echo "Erreur : " . mysqli_error($conn);
     }
 }
+
+//AFFICHE
 $sql="SELECT * FROM habitat";
 $result=mysqli_query($conn,$sql);
-   
 
+//delete
+if(isset($_POST['delete']) && isset($_POST['idHab'])) {
+    $id = $_POST['idHab'];     
+    $sql = "DELETE FROM habitat WHERE idHab = $id";
+
+    if(mysqli_query($conn, $sql)){
+        
+        header("Location: habitat.php?delete=1");
+        exit();
+    } else {
+        echo "Erreur : " . mysqli_error($conn);
+    }
+}
+
+ 
  ?>
  
 
@@ -108,15 +124,17 @@ $result=mysqli_query($conn,$sql);
             <!-- Edit -->
             <a href="edit_habitat.php?id=<?php echo $row['idHab']; ?>"
                class="bg-blue-500 text-white px-3 py-1 rounded-lg">
-               ✏️ تعديل
+               ✏️edit
             </a>
 
             <!-- Delete -->
-            <a href="delete_habitat.php?id=<?php echo $row['idHab']; ?>"
-               class="bg-red-500 text-white px-3 py-1 rounded-lg"
-               onclick="return confirm('واش متأكد بلي بغيتي تحذف هاد المكان؟');">
-               🗑️ حذف
-            </a>
+             <form action="habitat.php" method="POST" onsubmit="return confirm('واش متأكد بلي بغيتي تحذف هاد المكان؟');">
+            <input type="hidden" name="idHab" value="<?php echo $row['idHab']; ?>">
+          <button type="submit" name="delete" class="bg-red-500 text-white px-3 py-1 rounded-lg">
+        🗑️delete
+    </button>
+</form>
+
         </div>
 
     </div>

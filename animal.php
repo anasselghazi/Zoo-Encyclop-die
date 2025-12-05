@@ -1,7 +1,7 @@
  
  <?php
 include 'dbconnect.php';
-
+//ajouter 
 if (isset($_POST['submit'])) {
     $nom = $_POST['nomAnimal'];
     $type = $_POST['type_alimentaire'];
@@ -22,13 +22,27 @@ if (isset($_POST['submit'])) {
         echo "Erreur : " . mysqli_error($conn);
     }
 }
-?>
-  <?php
- include 'dbconnect.php';
+
+  //affichier
+ 
 $sql="SELECT a.idAnimal,a.NomAnimal,a.Type_alimentaire,a.image,h.NomHabitat
 FROM  animal a
     INNER JOIN habitat h ON a.id_habitat = h.idHab ";
     $result = mysqli_query($conn,$sql);
+
+//DELETE
+
+if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
+    $id = ($_POST['idAnimal']);   
+    $sql = "DELETE FROM animal WHERE idAnimal = $id";
+
+    if(mysqli_query($conn, $sql)){
+        header("Location: animal.php?delete=1");
+        exit();
+    } else {
+        echo "Erreur : " . mysqli_error($conn);
+    }
+}
 
 
  ?>
@@ -146,12 +160,12 @@ FROM  animal a
         </a>
 
         <!-- DELETE BUTTON -->
-        <a href="delete_animal.php?id=<?php echo $row['idAnimal']; ?>"
-           class="bg-red-500 text-white px-3 py-1 rounded-lg"
-           onclick="return confirm('Supprimer cet animal ?');">
-           🗑️ Supprimer
-        </a>
-    </div>
+      <form action="animal.php" method="POST" onsubmit="return confirm('Supprimer cet animal ?');">
+    <input type="hidden" name="idAnimal" value="<?php echo $row['idAnimal']; ?>">
+    <button type="submit" name="delete" class="bg-red-500 text-white px-3 py-1 rounded-lg">
+        🗑️ Supprimer
+    </button>
+</form>
 
 </div>
 

@@ -42,7 +42,31 @@ if(isset($_POST['delete']) && isset($_POST['idHab'])) {
     }
 }
 
- 
+  //EDIT
+  // UPDATE (EDIT)
+if (isset($_POST['update'])) {
+    $id = $_POST['idHab'];
+    $nom = $_POST['NomHabitat'];
+    $desc = $_POST['Description_Hab'];
+    $image = $_POST['image'];
+
+    $sql = "UPDATE habitat 
+            SET NomHabitat='$nom',
+                Description_Hab='$desc',
+                image='$image'
+            WHERE idHab=$id";
+
+    if (mysqli_query($conn, $sql)) {
+        header("Location: habitat.php?updated=1");
+        exit();
+    } else {
+        echo "Erreur : " . mysqli_error($conn);
+    }
+}
+
+  
+
+
  ?>
  
 
@@ -121,11 +145,16 @@ if(isset($_POST['delete']) && isset($_POST['idHab'])) {
         <!-- Buttons -->
         <div class="flex justify-center gap-3 mt-3">
 
-            <!-- Edit -->
-            <a href="edit_habitat.php?id=<?php echo $row['idHab']; ?>"
-               class="bg-blue-500 text-white px-3 py-1 rounded-lg">
-               ✏️edit
-            </a>
+            <button type="button"
+    class="bg-blue-500 text-white px-3 py-1 rounded-lg"
+    onclick="openEditModal(
+        '<?php echo $row['idHab']; ?>',
+        '<?php echo $row['NomHabitat']; ?>',
+        '<?php echo $row['Description_Hab']; ?>',
+        '<?php echo $row['image']; ?>'
+    )">
+    ✏️ Modifier
+</button>
 
             <!-- Delete -->
              <form action="habitat.php" method="POST" onsubmit="return confirm('Supprimer cet animal ?');">
@@ -171,6 +200,49 @@ if(isset($_POST['delete']) && isset($_POST['idHab'])) {
         </div>
     </div>
 
+
+<!-- EDIT MODAL -->
+<div id="editModal"
+    class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center backdrop-blur-sm">
+
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 animate-fadeIn">
+        <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">Modifier Habitat</h2>
+
+        <form action="habitat.php" method="POST" class="space-y-4">
+
+            
+            <input type="hidden" id="edit_id" name="idHab">
+
+            <input type="text" id="edit_nom" name="NomHabitat"
+                   class="w-full p-3 border rounded-xl">
+
+            <textarea id="edit_desc" name="Description_Hab"
+                      class="w-full p-3 border rounded-xl"></textarea>
+
+            <input type="text" id="edit_image" name="image"
+                   class="w-full p-3 border rounded-xl">
+
+            <div class="flex justify-between">
+
+                <button type="button" onclick="closeEditModal()"
+                        class="px-4 py-2 bg-gray-300 rounded-xl hover:bg-gray-400">
+                    Annuler
+                </button>
+
+                <button type="submit" name="update"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-500">
+                    Mettre à jour
+                </button>
+
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
     <!-- JS FOR POPUP -->
     <script>
         function openModal() {
@@ -182,6 +254,25 @@ if(isset($_POST['delete']) && isset($_POST['idHab'])) {
             document.getElementById("modal").classList.add("hidden");
             document.getElementById("modal").classList.remove("flex");
         }
+
+
+function openEditModal(id, nom, desc, image) {
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_nom").value = nom;
+    document.getElementById("edit_desc").value = desc;
+    document.getElementById("edit_image").value = image;
+
+    document.getElementById("editModal").classList.remove("hidden");
+    document.getElementById("editModal").classList.add("flex");
+}
+
+function closeEditModal() {
+    document.getElementById("editModal").classList.add("hidden");
+    document.getElementById("editModal").classList.remove("flex");
+}
+
+
+
     </script>
 
     <!-- Fade Animation -->

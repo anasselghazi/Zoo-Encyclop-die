@@ -43,6 +43,37 @@ if(isset($_POST['delete']) && isset($_POST['idAnimal'])){
         echo "Erreur : " . mysqli_error($conn);
     }
 }
+
+
+// EDIT 
+if(isset($_POST['update'])) {
+
+    $id = $_POST['idAnimal'];
+    $nom = $_POST['nomAnimal'];
+    $type = $_POST['type_alimentaire'];
+    $habitat = $_POST['id_habitat'];
+    $image = $_POST['image'];
+
+    $sql = "UPDATE animal 
+            SET NomAnimal='$nom',
+                Type_alimentaire='$type',
+                id_habitat='$habitat',
+                image='$image'
+            WHERE idAnimal='$id'";
+
+    mysqli_query($conn, $sql);
+
+    header("Location: animal.php?edit=1");
+    exit();
+}
+
+
+  
+
+
+
+
+
 //FILTER
  $habitat = $_POST['habitat'] ?? '';
 $type = $_POST['type'] ?? '';
@@ -189,11 +220,25 @@ $result = mysqli_query($conn, $sql);
 
     <div class="flex justify-center gap-3 mt-4">
         <!-- EDIT BUTTON -->
-        <a href="edit_animal.php?id=<?php echo $row['idAnimal']; ?>"
-           class="bg-blue-500 text-white px-3 py-1 rounded-lg">
-           ✏️ Modifier
-        </a>
 
+
+  <button type="button"
+    class="bg-blue-500 text-white px-3 py-1 rounded-lg"
+    onclick="openEditModal(
+        '<?php echo $row['idAnimal']; ?>',
+        '<?php echo $row['NomAnimal']; ?>',
+        '<?php echo $row['Type_alimentaire']; ?>',
+        '<?php echo $row['id_habitat']; ?>',
+        '<?php echo $row['image']; ?>'
+    )">
+    ✏️ Modifier
+</button>
+
+
+         
+
+
+        
         <!-- DELETE BUTTON -->
       <form action="animal.php" method="POST" onsubmit="return confirm('Supprimer cet animal ?');">
     <input type="hidden" name="idAnimal" value="<?php echo $row['idAnimal']; ?>">
@@ -251,8 +296,66 @@ $result = mysqli_query($conn, $sql);
         </div>
     </div>
 
+
+<div id="editModal"
+    class="fixed inset-0 bg-black bg-opacity-40 hidden justify-center items-center">
+
+    <div class="bg-white p-8 rounded-2xl w-96">
+        <h2 class="text-2xl font-bold text-blue-600 mb-4 text-center">Modifier Animal</h2>
+
+        <form action="animal.php" method="POST" class="space-y-4">
+
+            <input type="hidden" id="edit_id" name="idAnimal">
+
+            <input type="text" id="edit_nom" name="nomAnimal" class="w-full p-3 border rounded-xl">
+
+            <select id="edit_type" name="type_alimentaire" class="w-full p-3 border rounded-xl">
+                <option value="Carnivore">Carnivore</option>
+                <option value="Herbivore">Herbivore</option>
+                <option value="Omnivore">Omnivore</option>
+            </select>
+
+            <select id="edit_habitat" name="id_habitat" class="w-full p-3 border rounded-xl">
+                <option value="15">Savane</option>
+                <option value="14">Jungle</option>
+                <option value="16">Désert</option>
+                <option value="17">Océan</option>
+            </select>
+
+            <input type="text" id="edit_image" name="image" class="w-full p-3 border rounded-xl">
+
+            <div class="flex justify-between">
+                <button type="button" onclick="closeEditModal()"
+                    class="px-4 py-2 bg-gray-300 rounded-xl">Annuler</button>
+
+                <button type="submit" name="update"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-xl">Mettre à jour</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+    
+
+
+
+
+
+
+
+
     <!-- JS FOR POPUP -->
     <script>
+
+
+
+
+
+
+    
         function openModal() {
             document.getElementById("modal").classList.remove("hidden");
             document.getElementById("modal").classList.add("flex");
@@ -262,6 +365,24 @@ $result = mysqli_query($conn, $sql);
             document.getElementById("modal").classList.add("hidden");
             document.getElementById("modal").classList.remove("flex");
         }
+function openEditModal(id, nom, type, habitat, image) {
+
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_nom").value = nom;
+    document.getElementById("edit_type").value = type;
+    document.getElementById("edit_habitat").value = habitat;
+    document.getElementById("edit_image").value = image;
+
+    document.getElementById("editModal").classList.remove("hidden");
+    document.getElementById("editModal").classList.add("flex");
+}
+
+function closeEditModal() {
+    document.getElementById("editModal").classList.add("hidden");
+    document.getElementById("editModal").classList.remove("flex");
+}
+
+
     </script>
 
     <!-- Fade Animation -->

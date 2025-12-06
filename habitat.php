@@ -43,7 +43,7 @@ if(isset($_POST['delete']) && isset($_POST['idHab'])) {
 }
 
   //EDIT
-  // UPDATE (EDIT)
+  
 if (isset($_POST['update'])) {
     $id = $_POST['idHab'];
     $nom = $_POST['NomHabitat'];
